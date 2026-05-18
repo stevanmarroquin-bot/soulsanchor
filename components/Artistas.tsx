@@ -43,7 +43,7 @@ function ArtistCard({ a }: { a: (typeof artists)[0] }) {
       </div>
       <div style={{ textAlign: 'center' }}>
         <div className="font-aileron" style={{ fontSize: '13px', color: '#e8e4dc', marginBottom: '3px', letterSpacing: '0.02em' }}>
-          {a.nickname || a.name}
+          {a.nickname || a.name.split(' ')[0]}
         </div>
         <div style={{ fontSize: '11px', color: 'rgba(232,228,220,0.45)' }}>
           {a.subtitle || a.styles[0]}
