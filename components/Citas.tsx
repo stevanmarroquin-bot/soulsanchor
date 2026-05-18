@@ -191,8 +191,22 @@ export default function Citas() {
                   <div className="font-aileron" style={{ fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#e8e4dc', marginBottom: '0.75rem' }}>
                     ¡Gracias por tu solicitud!
                   </div>
-                  <div style={{ fontSize: '13px', color: 'rgba(232,228,220,0.4)', fontWeight: 300 }}>
-                    Te estaremos respondiendo en 24 horas hábiles o menos.
+                  <div style={{ fontSize: '13px', color: 'rgba(232,228,220,0.45)', fontWeight: 300, lineHeight: 1.8, marginBottom: '1.5rem' }}>
+                    Te estaremos contactando lo más pronto posible. Si deseas agilizar el proceso, puedes hablarnos por nuestras redes sociales.
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+                    {[
+                      { label: 'Instagram', href: 'https://www.instagram.com/soulsanchortattoo' },
+                      { label: 'Facebook', href: 'https://www.facebook.com/soulsanchortattoo' },
+                      { label: 'TikTok', href: 'https://www.tiktok.com/@soulsanchortattoo' },
+                    ].map(({ label, href }) => (
+                      <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="font-aileron"
+                        style={{ fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(232,228,220,0.5)', textDecoration: 'none', border: '0.5px solid rgba(232,228,220,0.15)', padding: '0.55rem 1rem', transition: 'color 0.2s, border-color 0.2s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#e8e4dc'; e.currentTarget.style.borderColor = 'rgba(232,228,220,0.4)' }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(232,228,220,0.5)'; e.currentTarget.style.borderColor = 'rgba(232,228,220,0.15)' }}>
+                        {label}
+                      </a>
+                    ))}
                   </div>
                 </div>
               ) : tipo === 'tatuaje' ? (
