@@ -91,20 +91,33 @@ export default function Citas() {
   const [tipo, setTipo] = useState<'tatuaje' | 'piercing'>('tatuaje')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [contacto, setContacto] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
     const form = e.currentTarget
     const data = new FormData(form)
-    const res = await fetch('https://formspree.io/f/mwvygvlv', {
-      method: 'POST',
-      body: data,
-      headers: { Accept: 'application/json' },
-    })
-    setLoading(false)
-    if (res.ok) setSubmitted(true)
+    try {
+      const res = await fetch('https://formspree.io/f/mwvygvlv', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+      if (res.ok) {
+        setSubmitted(true)
+      } else {
+        const body = await res.json().catch(() => ({}))
+        const msg = body?.errors?.map((err: { message: string }) => err.message).join(', ')
+        setError(msg || 'No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos directamente.')
+      }
+    } catch {
+      setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleTipoChange = (t: 'tatuaje' | 'piercing') => {
@@ -238,6 +251,12 @@ export default function Citas() {
                     />
                   </div>
 
+                  {error && (
+                    <p style={{ fontSize: '12px', color: '#e57373', background: 'rgba(229,115,115,0.08)', border: '0.5px solid rgba(229,115,115,0.25)', padding: '0.75rem', marginTop: '0.75rem', lineHeight: 1.6 }}>
+                      {error}
+                    </p>
+                  )}
+
                   <button type="submit" disabled={loading} className="font-aileron"
                     style={{ width: '100%', background: 'rgba(232,228,220,0.92)', color: '#0a0a08', border: 'none', padding: '0.85rem', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', cursor: loading ? 'wait' : 'pointer', marginTop: '1rem', opacity: loading ? 0.6 : 1 }}>
                     {loading ? 'Enviando...' : 'Enviar solicitud'}
@@ -274,6 +293,12 @@ export default function Citas() {
 
                   <label style={labelStyle}>Consulta o comentario</label>
                   <textarea style={{ ...inputStyle, resize: 'none' }} name="consulta" rows={2} placeholder="¿Tienes alguna duda o referencia?" />
+
+                  {error && (
+                    <p style={{ fontSize: '12px', color: '#e57373', background: 'rgba(229,115,115,0.08)', border: '0.5px solid rgba(229,115,115,0.25)', padding: '0.75rem', marginTop: '0.75rem', lineHeight: 1.6 }}>
+                      {error}
+                    </p>
+                  )}
 
                   <button type="submit" disabled={loading} className="font-aileron"
                     style={{ width: '100%', background: 'rgba(232,228,220,0.92)', color: '#0a0a08', border: 'none', padding: '0.85rem', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', cursor: loading ? 'wait' : 'pointer', marginTop: '1rem', opacity: loading ? 0.6 : 1 }}>
