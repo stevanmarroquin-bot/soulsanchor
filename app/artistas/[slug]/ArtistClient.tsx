@@ -26,18 +26,28 @@ const tagFilters: Record<string, string> = {
   'Anime': 'anime',
 }
 
+const PREVIEW = 9
+
 export default function ArtistClient({ artist }: { artist: Artist }) {
   useScrollReveal()
   const years = getYearsExperience(artist.startDate)
   const [active, setActive] = useState('Todos')
+  const [expanded, setExpanded] = useState(false)
   const [lightbox, setLightbox] = useState<string | null>(null)
 
   const filters = ['Todos', ...artist.styles]
-  const visible = artist.portfolio.filter(p => {
+  const all = artist.portfolio.filter(p => {
     if (active === 'Todos') return true
     const t = tagFilters[active]
     return Array.isArray(p.tag) ? p.tag.includes(t) : p.tag === t
   })
+  const visible = expanded ? all : all.slice(0, PREVIEW)
+  const hasMore = all.length > PREVIEW
+
+  function handleFilter(f: string) {
+    setActive(f)
+    setExpanded(false)
+  }
 
   return (
     <>
@@ -148,7 +158,7 @@ export default function ArtistClient({ artist }: { artist: Artist }) {
             {filters.length > 1 && (
               <div className="reveal" data-delay="100" style={{ display: 'flex', flexWrap: 'wrap', gap: '1px', marginBottom: '1px', background: 'rgba(232,228,220,0.07)' }}>
                 {filters.map(f => (
-                  <button key={f} onClick={() => setActive(f)} className="font-aileron"
+                  <button key={f} onClick={() => handleFilter(f)} className="font-aileron"
                     style={{ fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', background: active===f?'#111110':'#0a0a08', color: active===f?'#e8e4dc':'rgba(232,228,220,0.4)', padding: '0.65rem 1.2rem', border: 'none', cursor: 'pointer', transition: 'background 0.15s, color 0.15s' }}>
                     {f}
                   </button>
@@ -156,21 +166,51 @@ export default function ArtistClient({ artist }: { artist: Artist }) {
               </div>
             )}
 
-            {visible.length > 0 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: '1px', background: 'rgba(232,228,220,0.07)' }}>
-                {visible.map((p, i) => (
-                  <div key={i} className="reveal" data-delay={String(i*60)} onClick={() => setLightbox(p.src)}
-                    style={{ background: '#111110', aspectRatio: '2/3', position: 'relative', overflow: 'hidden', cursor: 'zoom-in' }}>
-                    <img src={p.src} alt={p.label} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.5s ease' }}
-                      onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-                      onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(10,10,8,0.7) 0%,transparent 50%)', opacity: 0, transition: 'opacity 0.3s', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}
-                      onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                      onMouseLeave={e => (e.currentTarget.style.opacity = '0')}>
-                      <span className="font-aileron" style={{ fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#e8e4dc' }}>{p.label}</span>
+            {all.length > 0 ? (
+              <div style={{ position: 'relative' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: '1px', background: 'rgba(232,228,220,0.07)' }}>
+                  {visible.map((p, i) => (
+                    <div key={i} onClick={() => setLightbox(p.src)}
+                      style={{ background: '#111110', aspectRatio: '2/3', position: 'relative', overflow: 'hidden', cursor: 'zoom-in' }}>
+                      <img src={p.src} alt={p.label}
+                        loading={i < 3 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.5s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
+                        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(10,10,8,0.7) 0%,transparent 50%)', opacity: 0, transition: 'opacity 0.3s', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}
+                        onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                        onMouseLeave={e => (e.currentTarget.style.opacity = '0')}>
+                        <span className="font-aileron" style={{ fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#e8e4dc' }}>{p.label}</span>
+                      </div>
                     </div>
+                  ))}
+                </div>
+
+                {/* Fade overlay when collapsed */}
+                {!expanded && hasMore && (
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(to top, #0a0a08 0%, transparent 100%)', pointerEvents: 'none' }} />
+                )}
+
+                {/* Expand / collapse button */}
+                {hasMore && (
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: expanded ? '1px' : '-0.5rem', position: 'relative', zIndex: 1 }}>
+                    <button
+                      onClick={() => setExpanded(!expanded)}
+                      className="font-aileron"
+                      style={{
+                        fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase',
+                        background: 'transparent', border: '0.5px solid rgba(232,228,220,0.2)',
+                        color: 'rgba(232,228,220,0.6)', padding: '0.85rem 2rem',
+                        cursor: 'pointer', transition: 'border-color 0.2s, color 0.2s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(232,228,220,0.5)'; e.currentTarget.style.color = '#e8e4dc' }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(232,228,220,0.2)'; e.currentTarget.style.color = 'rgba(232,228,220,0.6)' }}
+                    >
+                      {expanded ? 'Ocultar portafolio ↑' : `Ver los ${all.length} trabajos ↓`}
+                    </button>
                   </div>
-                ))}
+                )}
               </div>
             ) : (
               <div style={{ padding: '5rem', textAlign: 'center', background: '#111110', border: '0.5px solid rgba(232,228,220,0.07)' }}>

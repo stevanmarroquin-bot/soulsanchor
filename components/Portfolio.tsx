@@ -69,13 +69,23 @@ const tagMap: Record<string, string> = {
   'Cover Up':       'cover-up',
 }
 
+const PREVIEW = 9
+
 export default function Portfolio() {
   const [active, setActive] = useState('Todos')
+  const [expanded, setExpanded] = useState(false)
   const [lightbox, setLightbox] = useState<string | null>(null)
 
-  const visible = pieces.filter(
+  const all = pieces.filter(
     (p) => active === 'Todos' || p.tag === tagMap[active]
   )
+  const visible = expanded ? all : all.slice(0, PREVIEW)
+  const hasMore = all.length > PREVIEW
+
+  function handleFilter(f: string) {
+    setActive(f)
+    setExpanded(false)
+  }
 
   return (
     <section id="portafolio" className="section-line" style={{ padding: 'clamp(3rem, 8vw, 6rem) clamp(1.5rem, 5vw, 5rem)' }}>
@@ -96,7 +106,7 @@ export default function Portfolio() {
           {filters.map((f) => (
             <button
               key={f}
-              onClick={() => setActive(f)}
+              onClick={() => handleFilter(f)}
               className="font-aileron"
               style={{
                 fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase',
@@ -111,30 +121,59 @@ export default function Portfolio() {
           ))}
         </div>
 
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1px', background: 'rgba(232,228,220,0.07)' }}>
-          {visible.map((p, i) => (
-            <div
-              key={i}
-              onClick={() => setLightbox(p.src)}
-              style={{ background: '#111110', aspectRatio: '2/3', position: 'relative', overflow: 'hidden', cursor: 'zoom-in' }}
-            >
-              <img
-                src={p.src}
-                alt={p.label}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.4s ease' }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-              />
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,8,0.5)', opacity: 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
+        {/* Grid with fade when collapsed */}
+        <div style={{ position: 'relative' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1px', background: 'rgba(232,228,220,0.07)' }}>
+            {visible.map((p, i) => (
+              <div
+                key={i}
+                onClick={() => setLightbox(p.src)}
+                style={{ background: '#111110', aspectRatio: '2/3', position: 'relative', overflow: 'hidden', cursor: 'zoom-in' }}
               >
-                <span className="font-aileron" style={{ fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#e8e4dc' }}>{p.label}</span>
+                <img
+                  src={p.src}
+                  alt={p.label}
+                  loading={i < 3 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.4s ease' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,8,0.5)', opacity: 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
+                >
+                  <span className="font-aileron" style={{ fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#e8e4dc' }}>{p.label}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Fade overlay when collapsed */}
+          {!expanded && hasMore && (
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(to top, #0a0a08 0%, transparent 100%)', pointerEvents: 'none' }} />
+          )}
         </div>
+
+        {/* Expand / collapse button */}
+        {hasMore && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: expanded ? '1px' : '-0.5rem', position: 'relative', zIndex: 1 }}>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="font-aileron"
+              style={{
+                fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase',
+                background: 'transparent', border: '0.5px solid rgba(232,228,220,0.2)',
+                color: 'rgba(232,228,220,0.6)', padding: '0.85rem 2rem',
+                cursor: 'pointer', transition: 'border-color 0.2s, color 0.2s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(232,228,220,0.5)'; e.currentTarget.style.color = '#e8e4dc' }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(232,228,220,0.2)'; e.currentTarget.style.color = 'rgba(232,228,220,0.6)' }}
+            >
+              {expanded ? 'Ocultar portafolio ↑' : `Ver los ${all.length} trabajos ↓`}
+            </button>
+          </div>
+        )}
 
         {/* CTA bar */}
         <div style={{ marginTop: '1px', background: 'rgba(232,228,220,0.04)', padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
