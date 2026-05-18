@@ -15,7 +15,6 @@ export default function Nav() {
   const isHome = pathname === '/'
 
   function resolveHref(l: typeof links[0]) {
-    if ('href' in l) return l.href
     return isHome ? l.anchor : `/${l.anchor}`
   }
 
