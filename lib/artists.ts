@@ -120,7 +120,7 @@ export const artists: Artist[] = [
   {
     slug: 'chejo',
     name: 'Sergio Sosa',
-    nickname: 'Chejo Sosa',
+    nickname: 'Chejo',
     startDate: '2013-02-01',
     styles: ['Ilustrativo', 'Color', 'Blackwork'],
     bio: 'Me gusta mucho el café, mi banda favorita es Korn, colecciono juguetes vintage y también sneakers. Me gusta mucho dibujar cosas surreales y diseños fuera de lo común.',
