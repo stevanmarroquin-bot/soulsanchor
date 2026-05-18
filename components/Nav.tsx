@@ -65,7 +65,6 @@ export default function Nav() {
             <a
               key={l.label}
               href={resolveHref(l)}
-              target={'target' in l ? l.target : undefined}
               style={{
                 fontSize: '12px',
                 letterSpacing: '0.15em',
@@ -127,7 +126,6 @@ export default function Nav() {
             <a
               key={l.label}
               href={resolveHref(l)}
-              target={'target' in l ? l.target : undefined}
               onClick={() => setMenuOpen(false)}
               style={{
                 display: 'block',
