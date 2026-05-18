@@ -13,36 +13,30 @@ function useLangToggle() {
   const [lang, setLang] = useState<'es' | 'en'>('es')
 
   useEffect(() => {
-    // Detect if page is already translated (from cookie)
     const match = document.cookie.match(/googtrans=\/es\/(\w+)/)
     if (match && match[1] === 'en') setLang('en')
   }, [])
 
-  function toggleLang() {
-    if (lang === 'es') {
-      setLang('en')
-      const select = document.querySelector('.goog-te-combo') as HTMLSelectElement | null
-      if (select) {
-        select.value = 'en'
-        select.dispatchEvent(new Event('change'))
-      }
+  function setLanguage(target: 'es' | 'en') {
+    if (target === 'en') {
+      document.cookie = 'googtrans=/es/en; path=/'
+      document.cookie = `googtrans=/es/en; path=/; domain=.${window.location.hostname}`
     } else {
-      // Clear translation cookies and reload to restore Spanish
-      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`
-      setLang('es')
-      window.location.reload()
+      const past = 'expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
+      document.cookie = `googtrans=; ${past}`
+      document.cookie = `googtrans=; ${past}; domain=.${window.location.hostname}`
     }
+    window.location.reload()
   }
 
-  return { lang, toggleLang }
+  return { lang, setLanguage }
 }
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
-  const { lang, toggleLang } = useLangToggle()
+  const { lang, setLanguage } = useLangToggle()
 
   function resolveHref(l: typeof links[0]) {
     return isHome ? l.anchor : `/${l.anchor}`
@@ -112,26 +106,29 @@ export default function Nav() {
         </div>
 
         {/* CTA — right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* Language toggle */}
-          <button
-            onClick={toggleLang}
-            className="font-aileron hidden md:block"
-            style={{
-              fontSize: '10px',
-              letterSpacing: '0.18em',
-              background: 'transparent',
-              border: '0.5px solid rgba(232,228,220,0.2)',
-              color: 'rgba(232,228,220,0.55)',
-              padding: '0.4rem 0.75rem',
-              cursor: 'pointer',
-              transition: 'border-color 0.2s, color 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#e8e4dc'; e.currentTarget.style.borderColor = 'rgba(232,228,220,0.5)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(232,228,220,0.55)'; e.currentTarget.style.borderColor = 'rgba(232,228,220,0.2)' }}
-          >
-            {lang === 'es' ? 'EN' : 'ES'}
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Language toggle — visible on all screen sizes */}
+          <div style={{ display: 'flex', background: 'rgba(232,228,220,0.06)', border: '0.5px solid rgba(232,228,220,0.15)', borderRadius: '2px', overflow: 'hidden' }}>
+            {(['es', 'en'] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLanguage(l)}
+                className="font-aileron"
+                style={{
+                  fontSize: '10px',
+                  letterSpacing: '0.14em',
+                  padding: '0.38rem 0.65rem',
+                  cursor: lang === l ? 'default' : 'pointer',
+                  border: 'none',
+                  background: lang === l ? '#e8e4dc' : 'transparent',
+                  color: lang === l ? '#0a0a08' : 'rgba(232,228,220,0.45)',
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
 
           <a
             href={citasHref}
@@ -190,7 +187,7 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <div style={{ padding: '1rem 3rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ padding: '1rem 3rem 1.5rem' }}>
             <a
               href={citasHref}
               onClick={() => setMenuOpen(false)}
@@ -209,22 +206,6 @@ export default function Nav() {
             >
               Agenda tu cita
             </a>
-            <button
-              onClick={() => { setMenuOpen(false); toggleLang() }}
-              className="font-aileron"
-              style={{
-                fontSize: '10px',
-                letterSpacing: '0.18em',
-                background: 'transparent',
-                border: '0.5px solid rgba(232,228,220,0.2)',
-                color: 'rgba(232,228,220,0.55)',
-                padding: '0.7rem',
-                cursor: 'pointer',
-                width: '100%',
-              }}
-            >
-              {lang === 'es' ? 'View in English' : 'Ver en Español'}
-            </button>
           </div>
         </div>
       )}
