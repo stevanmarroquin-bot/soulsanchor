@@ -383,7 +383,7 @@ export const artists: Artist[] = [
   {
     slug: 'luis',
     name: 'Luis Aguilar',
-    nickname: 'Bimbo',
+    nickname: 'Luis',
     startDate: '2021-02-01',
     styles: ['Black and Gray', 'Realismo', 'Ilustrativo'],
     bio: 'Comencé a tatuar en febrero de 2021 y desde entonces he dedicado mi tiempo a desarrollar mi técnica y encontrar una identidad propia. Actualmente mi enfoque está en crear un estilo inspirado en la estética renacentista aplicada al black and grey, buscando combinar sombras, profundidad y composición artística en cada pieza. Me interesa que cada tatuaje tenga carácter, elegancia y una esencia atemporal.',
