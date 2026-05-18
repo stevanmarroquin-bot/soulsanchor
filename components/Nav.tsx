@@ -32,6 +32,30 @@ function useLangToggle() {
   return { lang, setLanguage }
 }
 
+function LangPill({ lang, setLanguage }: { lang: 'es' | 'en'; setLanguage: (l: 'es' | 'en') => void }) {
+  return (
+    <div style={{ display: 'flex', background: 'rgba(232,228,220,0.06)', border: '0.5px solid rgba(232,228,220,0.15)', borderRadius: '2px', overflow: 'hidden', flexShrink: 0 }}>
+      {(['es', 'en'] as const).map((l) => (
+        <button key={l} onClick={() => setLanguage(l)} className="font-aileron"
+          style={{ fontSize: '10px', letterSpacing: '0.14em', padding: '0.38rem 0.65rem', cursor: lang === l ? 'default' : 'pointer', border: 'none', background: lang === l ? '#e8e4dc' : 'transparent', color: lang === l ? '#0a0a08' : 'rgba(232,228,220,0.45)', transition: 'background 0.15s, color 0.15s' }}>
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function AgendaBtn({ href, fullWidth }: { href: string; fullWidth?: boolean }) {
+  return (
+    <a href={href} className="font-aileron"
+      style={{ fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', background: '#e8e4dc', color: '#0a0a08', padding: '0.6rem 1.5rem', textDecoration: 'none', transition: 'opacity 0.2s', whiteSpace: 'nowrap', textAlign: 'center', flex: fullWidth ? 1 : undefined }}
+      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}>
+      Agenda tu cita
+    </a>
+  )
+}
+
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -59,110 +83,45 @@ export default function Nav() {
     >
       {/* Main bar */}
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(1.2rem, 4vw, 3rem)' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0.75rem 0',
-        }}
-      >
-        {/* Logo */}
-        <a href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-          <img src="/logo.png" alt="Soul's Anchor" style={{ height: '52px', width: 'auto', display: 'block', background: 'transparent' }} />
-        </a>
 
-        {/* Desktop nav links — center */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '2.5rem',
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-          className="hidden md:flex"
-        >
-          {links.map((l) => (
-            <a
-              key={l.label}
-              href={resolveHref(l)}
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'rgba(232,228,220,0.55)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-                fontWeight: 400,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#e8e4dc')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,228,220,0.55)')}
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
+        {/* Row 1: Logo · [desktop: centered links] · [desktop: ES|EN + Agenda] · [mobile: hamburger] */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0 0' }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <img src="/logo.png" alt="Soul's Anchor" style={{ height: '52px', width: 'auto', display: 'block', background: 'transparent' }} />
+          </a>
 
-        {/* CTA — right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Language toggle — visible on all screen sizes */}
-          <div style={{ display: 'flex', background: 'rgba(232,228,220,0.06)', border: '0.5px solid rgba(232,228,220,0.15)', borderRadius: '2px', overflow: 'hidden' }}>
-            {(['es', 'en'] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLanguage(l)}
-                className="font-aileron"
-                style={{
-                  fontSize: '10px',
-                  letterSpacing: '0.14em',
-                  padding: '0.38rem 0.65rem',
-                  cursor: lang === l ? 'default' : 'pointer',
-                  border: 'none',
-                  background: lang === l ? '#e8e4dc' : 'transparent',
-                  color: lang === l ? '#0a0a08' : 'rgba(232,228,220,0.45)',
-                  transition: 'background 0.15s, color 0.15s',
-                }}
-              >
-                {l.toUpperCase()}
-              </button>
+          {/* Desktop: centered links */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2.5rem', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+            {links.map((l) => (
+              <a key={l.label} href={resolveHref(l)}
+                style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(232,228,220,0.55)', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 400 }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#e8e4dc')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(232,228,220,0.55)')}>
+                {l.label}
+              </a>
             ))}
           </div>
 
-          <a
-            href={citasHref}
-            style={{
-              fontSize: '12px',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              background: '#e8e4dc',
-              color: '#0a0a08',
-              padding: '0.6rem 1.5rem',
-              textDecoration: 'none',
-              fontFamily: 'AileronHeavy, sans-serif',
-              transition: 'opacity 0.2s',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-          >
-            Agenda tu cita
-          </a>
+          {/* Desktop: ES|EN + Agenda */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
+            <LangPill lang={lang} setLanguage={setLanguage} />
+            <AgendaBtn href={citasHref} />
+          </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', flexDirection: 'column', gap: '5px' }}
-          >
+          {/* Mobile: hamburger only */}
+          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
             <span style={{ display: 'block', width: '22px', height: '1.5px', background: '#e8e4dc', transition: 'transform 0.2s', transform: menuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none' }} />
             <span style={{ display: 'block', width: '22px', height: '1.5px', background: '#e8e4dc', opacity: menuOpen ? 0 : 1, transition: 'opacity 0.2s' }} />
             <span style={{ display: 'block', width: '22px', height: '1.5px', background: '#e8e4dc', transition: 'transform 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none' }} />
           </button>
         </div>
-      </div>
+
+        {/* Row 2: Mobile only — ES|EN + Agenda */}
+        <div className="md:hidden" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0 0.65rem' }}>
+          <LangPill lang={lang} setLanguage={setLanguage} />
+          <AgendaBtn href={citasHref} fullWidth />
+        </div>
 
       </div>
       {/* Mobile menu */}
