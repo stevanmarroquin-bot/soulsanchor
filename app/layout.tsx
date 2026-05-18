@@ -81,8 +81,26 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                  pageLanguage: 'es',
+                  includedLanguages: 'en',
+                  autoDisplay: false,
+                }, 'google_translate_element');
+              }
+            `,
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" />
       </head>
-      <body>{children}</body>
+      <body>
+        <div id="google_translate_element" style={{ display: 'none' }} />
+        {children}
+      </body>
     </html>
   )
 }
