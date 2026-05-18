@@ -101,17 +101,14 @@ export default function Citas() {
     const form = e.currentTarget
     const data = new FormData(form)
     try {
-      const res = await fetch('https://formspree.io/f/mwvygvlv', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         body: data,
-        headers: { Accept: 'application/json' },
       })
       if (res.ok) {
         setSubmitted(true)
       } else {
-        const body = await res.json().catch(() => ({}))
-        const msg = body?.errors?.map((err: { message: string }) => err.message).join(', ')
-        setError(msg || 'No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos directamente.')
+        setError('No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos directamente.')
       }
     } catch {
       setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
@@ -229,11 +226,26 @@ export default function Citas() {
                   <label style={labelStyle}>Tamaño aproximado</label>
                   <input style={inputStyle} name="tamano" type="text" placeholder="Sé lo más específico posible." required />
 
-                  <div style={{ background: 'rgba(232,228,220,0.03)', border: '0.5px solid rgba(232,228,220,0.08)', padding: '0.9rem 1rem' }}>
-                    <div style={{ fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(232,228,220,0.35)', marginBottom: '0.5rem' }}>Referencias</div>
-                    <p style={{ fontSize: '12px', color: 'rgba(232,228,220,0.5)', lineHeight: 1.8, fontWeight: 300 }}>
-                      Envíanos tus referencias, fotos del área o del tatuaje que deseas cubrir directamente por <strong style={{ color: 'rgba(232,228,220,0.7)', fontWeight: 400 }}>WhatsApp o Instagram</strong> después de enviar este formulario.
+                  <div>
+                    <label style={labelStyle}>Imágenes de referencia</label>
+                    <p style={{ fontSize: '11px', color: 'rgba(232,228,220,0.38)', lineHeight: 1.7, marginBottom: '0.5rem', fontWeight: 300 }}>
+                      Adjunta referencias, fotos del área, o fotos del tatuaje que deseas cubrir. Si vas a enviar una foto del área, asegúrate que salga en una posición natural, párate recto y pídele favor a alguien que te tome la foto.
                     </p>
+                    <input
+                      type="file"
+                      name="referencias"
+                      accept="image/*"
+                      multiple
+                      style={{
+                        width: '100%',
+                        background: 'transparent',
+                        border: '0.5px solid rgba(232,228,220,0.12)',
+                        padding: '0.55rem 0.8rem',
+                        color: 'rgba(232,228,220,0.5)',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                      }}
+                    />
                   </div>
 
                   {error && (
