@@ -41,48 +41,14 @@ const labelStyle = {
   marginTop: '0.9rem',
 }
 
-function ContactFields({ contacto, setContacto }: { contacto: string; setContacto: (v: string) => void }) {
+function ContactFields() {
   return (
     <>
-      <label style={labelStyle}>¿Cómo prefieres que te contactemos?</label>
-      <div style={{ display: 'flex', gap: '1px', background: 'rgba(232,228,220,0.07)' }}>
-        {['WhatsApp', 'Instagram', 'Correo'].map((opt) => (
-          <label key={opt} style={{ flex: 1, cursor: 'pointer' }}>
-            <input type="radio" name="contacto_preferido" value={opt} required onChange={() => setContacto(opt)} style={{ display: 'none' }} />
-            <div style={{
-              padding: '0.6rem',
-              textAlign: 'center',
-              fontSize: '10px',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: contacto === opt ? '#e8e4dc' : 'rgba(232,228,220,0.45)',
-              background: contacto === opt ? '#1a1a18' : '#0a0a08',
-              transition: 'background 0.15s, color 0.15s',
-              userSelect: 'none',
-            }}>
-              {opt}
-            </div>
-          </label>
-        ))}
-      </div>
-      {contacto === 'WhatsApp' && (
-        <>
-          <label style={labelStyle}>WhatsApp / Tel</label>
-          <input style={inputStyle} name="whatsapp" type="text" placeholder="+502 ..." required />
-        </>
-      )}
-      {contacto === 'Correo' && (
-        <>
-          <label style={labelStyle}>Correo electrónico</label>
-          <input style={inputStyle} name="correo" type="email" placeholder="tu@email.com" required />
-        </>
-      )}
-      {contacto === 'Instagram' && (
-        <>
-          <label style={labelStyle}>Instagram</label>
-          <input style={inputStyle} name="instagram" type="text" placeholder="@tuusuario" required />
-        </>
-      )}
+      <label style={labelStyle}>WhatsApp</label>
+      <input style={inputStyle} name="whatsapp" type="text" placeholder="+502 ..." required />
+
+      <label style={labelStyle}>Correo electrónico</label>
+      <input style={inputStyle} name="correo" type="email" placeholder="tu@email.com" required />
     </>
   )
 }
@@ -92,7 +58,6 @@ export default function Citas() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [contacto, setContacto] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -120,7 +85,6 @@ export default function Citas() {
   const handleTipoChange = (t: 'tatuaje' | 'piercing') => {
     setTipo(t)
     setSubmitted(false)
-    setContacto('')
   }
 
   const steps = tipo === 'tatuaje' ? tattooSteps : piercingSteps
@@ -216,7 +180,7 @@ export default function Citas() {
                   <label style={{ ...labelStyle, marginTop: 0 }}>Nombre completo</label>
                   <input style={inputStyle} name="nombre" type="text" placeholder="Tu nombre" required />
 
-                  <ContactFields contacto={contacto} setContacto={setContacto} />
+                  <ContactFields />
 
                   <label style={labelStyle}>Artista de preferencia</label>
                   <select style={{ ...inputStyle, cursor: 'pointer' }} name="artista">
@@ -284,7 +248,7 @@ export default function Citas() {
                   <label style={{ ...labelStyle, marginTop: 0 }}>Nombre completo</label>
                   <input style={inputStyle} name="nombre" type="text" placeholder="Tu nombre" required />
 
-                  <ContactFields contacto={contacto} setContacto={setContacto} />
+                  <ContactFields />
 
                   <label style={labelStyle}>Especialista de preferencia</label>
                   <select style={{ ...inputStyle, cursor: 'pointer' }} name="especialista">

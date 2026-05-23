@@ -15,10 +15,8 @@ export async function POST(req: NextRequest) {
 
     const tipo = data.get('tipo') as string
     const nombre = data.get('nombre') as string
-    const contacto = data.get('contacto_preferido') as string
     const whatsapp = data.get('whatsapp') as string
     const correo = data.get('correo') as string
-    const instagram = data.get('instagram') as string
 
     // Tattoo fields
     const artista = data.get('artista') as string
@@ -45,11 +43,7 @@ export async function POST(req: NextRequest) {
         }))
     )
 
-    const contactoInfo = contacto === 'WhatsApp'
-      ? `WhatsApp: ${whatsapp}`
-      : contacto === 'Correo'
-      ? `Correo: ${correo}`
-      : `Instagram: ${instagram}`
+    const contactoInfo = `WhatsApp: ${whatsapp} · Correo: ${correo}`
 
     const rows = tipo === 'tatuaje'
       ? `
@@ -72,7 +66,8 @@ export async function POST(req: NextRequest) {
         <h2 style="font-size:22px;margin:0 0 24px;color:#111;">Nueva solicitud de cita · ${tipo === 'tatuaje' ? 'Tatuaje' : 'Piercing'}</h2>
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:6px 0;color:#888;font-size:13px;">Nombre</td><td style="padding:6px 0 6px 16px;font-size:13px;">${nombre}</td></tr>
-          <tr><td style="padding:6px 0;color:#888;font-size:13px;">Contacto</td><td style="padding:6px 0 6px 16px;font-size:13px;">${contactoInfo}</td></tr>
+          <tr><td style="padding:6px 0;color:#888;font-size:13px;">WhatsApp</td><td style="padding:6px 0 6px 16px;font-size:13px;">${whatsapp}</td></tr>
+          <tr><td style="padding:6px 0;color:#888;font-size:13px;">Correo</td><td style="padding:6px 0 6px 16px;font-size:13px;">${correo}</td></tr>
           ${rows}
         </table>
         ${attachments.length > 0 ? `<p style="font-size:12px;color:#888;margin-top:24px;">${attachments.length} imagen(es) adjunta(s).</p>` : ''}
