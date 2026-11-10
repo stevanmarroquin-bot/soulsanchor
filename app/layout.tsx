@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://soulsanchor.com'),
@@ -52,6 +53,7 @@ const localBusinessJsonLd = {
   description:
     "Estudio de tatuaje personalizado en Ciudad de Guatemala, Zona 10. Arte original ejecutado por 14 artistas especializados en Neo Japonés, Neo Tradicional, Realismo, Blackwork, Tradicional, Anime, Línea fina, Color, Cover Up y Piercing.",
   email: 'soulsanchortattoo@gmail.com',
+  telephone: '+50233498563',
   address: {
     '@type': 'PostalAddress',
     streetAddress: '4 Avenida y 15 Calle esquina, Santander Plaza',
@@ -100,6 +102,7 @@ export default function RootLayout({
       <body>
         <div id="google_translate_element" style={{ display: 'none' }} />
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   )

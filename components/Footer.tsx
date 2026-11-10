@@ -1,7 +1,15 @@
 'use client'
+import { whatsappLink, WHATSAPP_DISPLAY } from '@/lib/site'
+import { styleRankings } from '@/lib/styleRanking'
 
 
-const studioLinks = ['Acerca', 'Artistas', 'FAQs', 'Cuidados del tatuaje', 'Cuidados de perforación']
+const studioLinks = [
+  { label: 'Acerca', href: '/#acerca' },
+  { label: 'Artistas', href: '/#artistas' },
+  { label: 'Preguntas frecuentes', href: '/#faqs' },
+  { label: 'Cuidados del tatuaje', href: '/cuidados/tatuaje' },
+  { label: 'Cuidados de perforación', href: '/cuidados/piercing' },
+]
 const socialLinks = [
   { label: 'Instagram', href: 'https://www.instagram.com/soulsanchortattoo' },
   { label: 'Facebook', href: 'https://www.facebook.com/soulsanchortattoo' },
@@ -33,6 +41,9 @@ export default function Footer() {
           <p style={{ fontSize: '12px', color: 'rgba(232,228,220,0.2)', marginTop: '0.75rem', fontWeight: 300 }}>
             soulsanchortattoo@gmail.com
           </p>
+          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', fontSize: '12px', color: 'rgba(232,228,220,0.62)', marginTop: '0.4rem', textDecoration: 'none', fontWeight: 300 }}>
+            WhatsApp: {WHATSAPP_DISPLAY}
+          </a>
         </div>
 
         {/* Estudio */}
@@ -43,11 +54,25 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
             {studioLinks.map((l) => (
               <a
-                key={l}
-                href={`#${l.toLowerCase().replace(/ /g, '-')}`}
+                key={l.href}
+                href={l.href}
                 style={{ fontSize: '12px', color: 'rgba(232,228,220,0.62)', textDecoration: 'none', fontWeight: 300 }}
               >
-                {l}
+                {l.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Estilos */}
+        <div>
+          <div style={{ fontSize: '9px', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(232,228,220,0.42)', marginBottom: '1.1rem' }}>
+            Estilos
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+            {styleRankings.map((r) => (
+              <a key={r.slug} href={`/tatuajes/${r.slug}`} style={{ fontSize: '12px', color: 'rgba(232,228,220,0.62)', textDecoration: 'none', fontWeight: 300 }}>
+                {r.name}
               </a>
             ))}
           </div>
@@ -78,7 +103,7 @@ export default function Footer() {
         }}
       >
         <span style={{ fontSize: '10px', color: 'rgba(232,228,220,0.18)', letterSpacing: '0.05em' }}>
-          © 2025 Soul&apos;s Anchor Tattoo Studio · Todos los derechos reservados
+          © {new Date().getFullYear()} Soul&apos;s Anchor Tattoo Studio · Todos los derechos reservados
         </span>
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           {socialLinks.map((s) => (

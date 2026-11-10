@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { artists } from '@/lib/artists'
 
 const tattooSteps = [
@@ -57,6 +57,13 @@ export default function Citas() {
   const [tipo, setTipo] = useState<'tatuaje' | 'piercing'>('tatuaje')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  // Preselect artist from ?artista=<slug> (links from style and artist pages)
+  const [preArtist, setPreArtist] = useState('')
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('artista')
+    const a = slug ? artists.find(x => x.slug === slug) : undefined
+    if (a) setPreArtist(a.nickname || a.name)
+  }, [])
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -183,7 +190,7 @@ export default function Citas() {
                   <ContactFields />
 
                   <label style={labelStyle}>Artista de preferencia</label>
-                  <select style={{ ...inputStyle, cursor: 'pointer' }} name="artista">
+                  <select key={preArtist} defaultValue={preArtist} style={{ ...inputStyle, cursor: 'pointer' }} name="artista">
                     <option value="" style={{ background: '#111110' }}>Sugerir a un artista</option>
                     {tatuadores.map(a => (
                       <option key={a.slug} value={a.nickname || a.name} style={{ background: '#111110' }}>

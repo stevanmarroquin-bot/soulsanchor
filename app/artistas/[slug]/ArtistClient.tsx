@@ -112,7 +112,7 @@ export default function ArtistClient({ artist }: { artist: Artist }) {
 
                 {/* CTAs */}
                 <div className="reveal" data-delay="350" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <a href={`/#citas`} className="font-aileron"
+                  <a href={`/?artista=${artist.slug}#citas`} className="font-aileron"
                     style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', background: '#e8e4dc', color: '#0a0a08', padding: '0.85rem 2rem', textDecoration: 'none', transition: 'opacity 0.2s' }}
                     onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
                     onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>

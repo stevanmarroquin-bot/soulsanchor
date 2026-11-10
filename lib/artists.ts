@@ -21,7 +21,8 @@ export function getYearsExperience(startDate: string): number {
   return years
 }
 
-export const artists: Artist[] = [
+// Full list, including drafts. Use `artists` everywhere else.
+const allArtists: Artist[] = [
   {
     slug: 'ally',
     name: 'Allison Mejía',
@@ -428,7 +429,22 @@ export const artists: Artist[] = [
       { src: '/artistas/rafa/blackwork1.jpeg',      tag: 'blackwork', label: 'Blackwork' },
     ],
   },
+  {
+    // DRAFT (2026-11-10): do not deploy until photo and portfolio are filled in.
+    slug: 'daniel',
+    name: 'Daniel Vivar Furlan',
+    nickname: 'Daniel',
+    startDate: '2014-01-01',
+    styles: ['Ilustrativo', 'Color', 'Realismo', 'Black and Gray', 'Neo Tradicional', 'Línea fina'],
+    bio: 'Me empecé a interesar en el tatuaje viendo a los integrantes de las bandas que escuchaba en la adolescencia, pero las ganas de aprender llegaron con mi primer tatuaje: lo relacioné de inmediato con el dibujo, algo que he hecho toda mi vida. Aprendí la mayor parte por mi cuenta y luego reforcé mi técnica en seminarios. Tatúo desde 2014 y lo que más disfruto son las ilustraciones a color, tomar la idea de cada cliente y convertirla en una pieza personalizada.',
+    instagram: 'https://www.instagram.com/daniel_vivar_furlan',
+    // photo: '/artistas/daniel/profilepic.png', // TODO
+    portfolio: [], // TODO
+  },
 ]
+
+// Artists without a photo are drafts (e.g. new artists still collecting material) and stay hidden.
+export const artists: Artist[] = allArtists.filter(a => !!a.photo)
 
 export function getArtist(slug: string) {
   return artists.find(a => a.slug === slug)

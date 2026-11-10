@@ -153,6 +153,19 @@ export default function Hero() {
       {/* Content */}
       <div id="hero-content" style={{ position: 'relative', zIndex: 2, maxWidth: '800px', width: '100%' }}>
         <h1
+          className="hero-enter"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: 'rgba(232,228,220,0.6)',
+            fontWeight: 400,
+            marginBottom: '1.25rem',
+          }}
+        >
+          Estudio de tatuajes y piercing en Zona 10, Ciudad de Guatemala
+        </h1>
+        <p
           className="font-aileron hero-enter"
           style={{
             fontSize: 'clamp(56px, 12vw, 120px)',
@@ -167,7 +180,7 @@ export default function Hero() {
           <span style={{ color: 'rgba(232,228,220,0.45)' }}>no le temen</span>
           <br />
           a la permanencia.
-        </h1>
+        </p>
 
         <p
           className="hero-enter"

@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { artists } from '@/lib/artists'
+import { styleContent } from '@/lib/styleContent'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://soulsanchor.com'
@@ -11,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    })),
+    ...styleContent.map(s => ({
+      url: `${base}/tatuajes/${s.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
     })),
   ]
 }
